@@ -2,7 +2,6 @@ extends Node2D
 
 var selected = []
 
-signal action(act_type, pos)
 signal deselect
 
 enum action_types {
@@ -20,3 +19,8 @@ func _process(delta):
 	if Input.is_action_just_pressed("deselect"):
 		selected = []
 		emit_signal("deselect")
+
+func handle_action(action: action_types, pos: Vector2):
+	for unit in selected:
+		unit.on_action(action, pos)
+	

@@ -9,17 +9,19 @@ var is_selected = false
 signal selected(gnome)
 
 func _ready():
-	SelectionManager.action.connect(_on_action)
 	SelectionManager.deselect.connect(_on_deselect)
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if is_selected:
 		outline(true)
 		if Input.is_action_just_pressed("click") and ClickableController.current_hover.size() == 0:
 			makepath(get_global_mouse_position())
 	var next_path_pos := nav_agent.get_next_path_position()
 	var direction := global_position.direction_to(next_path_pos)
-	velocity = direction * SPEED
+	if global_position.distance_to(next_path_pos) < 10:
+		velocity = Vector2.ZERO
+	else:
+		velocity = direction * SPEED
 	move_and_slide()
 
 func makepath(target):
@@ -32,6 +34,8 @@ func outline(on):
 		sprite_2d.material.set_shader_parameter("thickness", 0)
 
 func trigger_action():
+	if SelectionManager.selected.size() != 0:
+		SelectionManager.emit_signal("deselect")
 	SelectionManager.selected = [self]
 	is_selected = true
 	outline(true)
@@ -40,5 +44,5 @@ func _on_deselect():
 	is_selected = false
 	outline(false)
 
-func _on_action(type: int, pos: Vector2):
+func on_action(type: int, pos: Vector2):
 	makepath(pos)

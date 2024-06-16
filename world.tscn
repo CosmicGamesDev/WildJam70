@@ -436,9 +436,19 @@ wait_time = 5.0
 one_shot = true
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+y_sort_enabled = true
 navigation_polygon = SubResource("NavigationPolygon_7kga4")
 
 [node name="Gnome" parent="NavigationRegion2D" instance=ExtResource("8_sf6dk")]
 position = Vector2(158, 121)
+
+[node name="Gnome2" parent="NavigationRegion2D" instance=ExtResource("8_sf6dk")]
+position = Vector2(176, 120)
+
+[node name="Gnome3" parent="NavigationRegion2D" instance=ExtResource("8_sf6dk")]
+position = Vector2(160, 145)
+
+[node name="Gnome4" parent="NavigationRegion2D" instance=ExtResource("8_sf6dk")]
+position = Vector2(178, 144)
 
 [connection signal="timeout" from="TreeManager/SpawnTimer" to="TreeManager" method="_on_spawn_timer_timeout"]
