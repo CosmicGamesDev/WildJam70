@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://bu20s8lnw6exv"]
+
+[ext_resource type="Script" path="res://ClickableAreaComponent.gd" id="1_r4bmq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5d4ka"]
+size = Vector2(12, 26)
+
+[node name="ClickableAreaComponent" type="Area2D"]
+script = ExtResource("1_r4bmq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_5d4ka")
+disabled = true

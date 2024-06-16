@@ -1,48 +1,22 @@
-[gd_scene load_steps=9 format=3 uid="uid://b81i735x25yyx"]
+[gd_scene load_steps=10 format=3 uid="uid://b81i735x25yyx"]
 
-[ext_resource type="Shader" path="res://tree.gdshader" id="1_oqmvp"]
+[ext_resource type="Shader" path="res://outline.gdshader" id="1_uqx71"]
 [ext_resource type="Script" path="res://tree.gd" id="2_2dgcc"]
 [ext_resource type="Texture2D" uid="uid://c12gvcu8bfrvj" path="res://tree.png" id="2_4vylw"]
+[ext_resource type="PackedScene" uid="uid://bu20s8lnw6exv" path="res://clickable_area_component.tscn" id="4_kkhi5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8c8ql"]
 resource_local_to_scene = true
-shader = ExtResource("1_oqmvp")
+shader = ExtResource("1_uqx71")
 shader_parameter/thickness = 0.0
 shader_parameter/ring_count = 8
 shader_parameter/ring_offset = 0.0
-shader_parameter/outline_color = Color(0.0823529, 0, 0.909804, 1)
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 shader_parameter/border_clipping_fix = true
 shader_parameter/aspect_ratio = 1.0
 shader_parameter/square_border = false
 shader_parameter/offset = null
 shader_parameter/max_or_add = false
-
-[sub_resource type="Animation" id="Animation_bdrq0"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0.1, 0.1)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("ClickableArea/CollisionShape2D:disabled")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
 
 [sub_resource type="Animation" id="Animation_m8pvx"]
 resource_name = "grow"
@@ -61,7 +35,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("ClickableArea/CollisionShape2D:disabled")
+tracks/1/path = NodePath("ClickableAreaComponent/CollisionShape2D:disabled")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -71,18 +45,44 @@ tracks/1/keys = {
 "values": [true, false]
 }
 
+[sub_resource type="Animation" id="Animation_bdrq0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ClickableAreaComponent/CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_pr238"]
 _data = {
 "RESET": SubResource("Animation_bdrq0"),
 "grow": SubResource("Animation_m8pvx")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5d4ka"]
-size = Vector2(12, 26)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgad0"]
+size = Vector2(4, 18)
 
 [node name="Tree" type="Sprite2D"]
 material = SubResource("ShaderMaterial_8c8ql")
-scale = Vector2(0.1, 0.1)
 texture = ExtResource("2_4vylw")
 region_rect = Rect2(18, 23, 12, 23)
 script = ExtResource("2_2dgcc")
@@ -93,12 +93,15 @@ libraries = {
 }
 autoplay = "grow"
 
-[node name="ClickableArea" type="Area2D" parent="."]
+[node name="ClickableAreaComponent" parent="." node_paths=PackedStringArray("parent", "sprite") instance=ExtResource("4_kkhi5")]
+parent = NodePath("..")
+sprite = NodePath("..")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableArea"]
+[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="."]
+vertices = PackedVector2Array(-6, 12, 6, 12, 6, -14, -6, -14)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(0, -1)
-shape = SubResource("RectangleShape2D_5d4ka")
-disabled = true
-
-[connection signal="mouse_entered" from="ClickableArea" to="." method="_on_clickable_area_mouse_entered"]
-[connection signal="mouse_exited" from="ClickableArea" to="." method="_on_clickable_area_mouse_exited"]
+shape = SubResource("RectangleShape2D_jgad0")

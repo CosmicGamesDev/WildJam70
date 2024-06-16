@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://b5d30m831ywhi"]
+[gd_scene load_steps=17 format=3 uid="uid://b5d30m831ywhi"]
 
 [ext_resource type="Texture2D" uid="uid://yc35kq22mnnh" path="res://fantasy_ [version 2.0]/fantasy_/taigaForest_.png" id="1_7k2nv"]
 [ext_resource type="Texture2D" uid="uid://bkmy6eh664sjm" path="res://fantasy_ [version 2.0]/fantasy_/tundraSwampTaigaForestDesert_0.png" id="2_3ah7w"]
@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bs2vte5vkhfnh" path="res://fantasy_ [version 2.0]/taiga_/taiga_.png" id="5_eweil"]
 [ext_resource type="Texture2D" uid="uid://c0pfrg05xfjiy" path="res://fantasy_ [version 2.0]/taiga_/taiga_ [resources].png" id="6_baqey"]
 [ext_resource type="Script" path="res://tree_manager.gd" id="7_ixj5f"]
-[ext_resource type="PackedScene" uid="uid://x1bv33ulsr3x" path="res://gnome.tscn" id="8_sf6dk"]
+[ext_resource type="PackedScene" uid="uid://tcm6gpq1pm5i" path="res://gnome.tscn" id="8_sf6dk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_texkk"]
 texture = ExtResource("1_7k2nv")
@@ -415,6 +415,12 @@ sources/3 = SubResource("TileSetAtlasSource_2oq0h")
 sources/4 = SubResource("TileSetAtlasSource_0pnnd")
 sources/5 = SubResource("TileSetAtlasSource_h3usa")
 
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_7kga4"]
+vertices = PackedVector2Array(502, 278, 10, 278, 10, 10, 502, 10)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(0, 0, 512, 0, 512, 288, 0, 288)])
+source_geometry_group_name = &"navigation_polygon_source_group"
+
 [node name="World" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
@@ -429,7 +435,10 @@ script = ExtResource("7_ixj5f")
 wait_time = 5.0
 one_shot = true
 
-[node name="Gnome" parent="." instance=ExtResource("8_sf6dk")]
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_7kga4")
+
+[node name="Gnome" parent="NavigationRegion2D" instance=ExtResource("8_sf6dk")]
 position = Vector2(158, 121)
 
 [connection signal="timeout" from="TreeManager/SpawnTimer" to="TreeManager" method="_on_spawn_timer_timeout"]
