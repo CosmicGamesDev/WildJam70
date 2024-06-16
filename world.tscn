@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://b5d30m831ywhi"]
+[gd_scene load_steps=16 format=3 uid="uid://b5d30m831ywhi"]
 
 [ext_resource type="Texture2D" uid="uid://yc35kq22mnnh" path="res://fantasy_ [version 2.0]/fantasy_/taigaForest_.png" id="1_7k2nv"]
 [ext_resource type="Texture2D" uid="uid://bkmy6eh664sjm" path="res://fantasy_ [version 2.0]/fantasy_/tundraSwampTaigaForestDesert_0.png" id="2_3ah7w"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bs2vte5vkhfnh" path="res://fantasy_ [version 2.0]/taiga_/taiga_.png" id="5_eweil"]
 [ext_resource type="Texture2D" uid="uid://c0pfrg05xfjiy" path="res://fantasy_ [version 2.0]/taiga_/taiga_ [resources].png" id="6_baqey"]
 [ext_resource type="Script" path="res://tree_manager.gd" id="7_ixj5f"]
+[ext_resource type="PackedScene" uid="uid://x1bv33ulsr3x" path="res://gnome.tscn" id="8_sf6dk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_texkk"]
 texture = ExtResource("1_7k2nv")
@@ -427,5 +428,8 @@ script = ExtResource("7_ixj5f")
 [node name="SpawnTimer" type="Timer" parent="TreeManager"]
 wait_time = 5.0
 one_shot = true
+
+[node name="Gnome" parent="." instance=ExtResource("8_sf6dk")]
+position = Vector2(158, 121)
 
 [connection signal="timeout" from="TreeManager/SpawnTimer" to="TreeManager" method="_on_spawn_timer_timeout"]
