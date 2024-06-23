@@ -1,15 +1,15 @@
-[gd_scene load_steps=11 format=3 uid="uid://b81i735x25yyx"]
+[gd_scene load_steps=11 format=3 uid="uid://2lc80f86dhjc"]
 
-[ext_resource type="Shader" path="res://outline.gdshader" id="1_uqx71"]
-[ext_resource type="Script" path="res://tree.gd" id="2_2dgcc"]
-[ext_resource type="Texture2D" uid="uid://c12gvcu8bfrvj" path="res://tree.png" id="2_4vylw"]
-[ext_resource type="PackedScene" uid="uid://dolh3oeb6umyg" path="res://clickable_area_component.tscn" id="4_kkhi5"]
+[ext_resource type="Shader" path="res://outline.gdshader" id="1_j5odj"]
+[ext_resource type="Texture2D" uid="uid://du2cq6ospn2t1" path="res://mushrooms.png" id="2_tkb5x"]
+[ext_resource type="Script" path="res://mushroom.gd" id="3_f5tol"]
+[ext_resource type="PackedScene" uid="uid://dolh3oeb6umyg" path="res://clickable_area_component.tscn" id="4_jt6sh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8c8ql"]
 resource_local_to_scene = true
-shader = ExtResource("1_uqx71")
+shader = ExtResource("1_j5odj")
 shader_parameter/thickness = 0.0
-shader_parameter/ring_count = 8
+shader_parameter/ring_count = 4
 shader_parameter/ring_offset = 0.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
 shader_parameter/border_clipping_fix = true
@@ -78,17 +78,20 @@ _data = {
 "grow": SubResource("Animation_m8pvx")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgad0"]
-size = Vector2(4, 8)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qudrj"]
+resource_local_to_scene = true
+size = Vector2(6, 8)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_d33i6"]
-size = Vector2(12, 26)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_frtoi"]
+size = Vector2(12, 12)
 
-[node name="Tree" type="Sprite2D"]
+[node name="Mushroom" type="Sprite2D"]
 material = SubResource("ShaderMaterial_8c8ql")
-texture = ExtResource("2_4vylw")
+texture = ExtResource("2_tkb5x")
+hframes = 4
+vframes = 2
 region_rect = Rect2(18, 23, 12, 23)
-script = ExtResource("2_2dgcc")
+script = ExtResource("3_f5tol")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -96,23 +99,29 @@ libraries = {
 }
 autoplay = "grow"
 
-[node name="ClickableAreaComponent" parent="." node_paths=PackedStringArray("parent", "sprite") instance=ExtResource("4_kkhi5")]
+[node name="ClickableAreaComponent" parent="." node_paths=PackedStringArray("parent", "sprite") instance=ExtResource("4_jt6sh")]
 parent = NodePath("..")
 sprite = NodePath("..")
 
+[node name="CollisionShape2D" parent="ClickableAreaComponent" index="0"]
+position = Vector2(0, 0)
+
 [node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="."]
-vertices = PackedVector2Array(-4, 8, 4, 8, 4, -8, -4, -8)
+visible = false
+vertices = PackedVector2Array(-4, 4, 4, 4, 4, -4, -4, -4)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(0, -4)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(0, 4)
-shape = SubResource("RectangleShape2D_jgad0")
+shape = SubResource("RectangleShape2D_qudrj")
 
-[node name="CutArea" type="Area2D" parent="."]
+[node name="PickupArea" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CutArea"]
-position = Vector2(0, -1)
-shape = SubResource("RectangleShape2D_d33i6")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea"]
+shape = SubResource("RectangleShape2D_frtoi")
 
-[connection signal="area_entered" from="CutArea" to="." method="_on_cut_area_area_entered"]
+[connection signal="area_entered" from="PickupArea" to="." method="_on_pickup_area_area_entered"]
+
+[editable path="ClickableAreaComponent"]

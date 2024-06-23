@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bh1vjburf5hk5"]
+
+[ext_resource type="Texture2D" uid="uid://du2cq6ospn2t1" path="res://mushrooms.png" id="1_ymdgv"]
+
+[node name="PickupMushroom" type="Sprite2D" groups=["mushroom"]]
+texture = ExtResource("1_ymdgv")
+hframes = 4
+vframes = 2

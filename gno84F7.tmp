@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3 uid="uid://tcm6gpq1pm5i"]
+
+[ext_resource type="Script" path="res://gnome.gd" id="1_y4xf0"]
+[ext_resource type="Shader" path="res://outline.gdshader" id="2_20f0e"]
+[ext_resource type="Texture2D" uid="uid://bjst2id7mbsmn" path="res://gnome.png" id="2_x00rq"]
+[ext_resource type="PackedScene" path="res://clickable_area_component.tscn" id="3_mnqev"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ehrkl"]
+radius = 4.0
+height = 10.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mj6xh"]
+resource_local_to_scene = true
+shader = ExtResource("2_20f0e")
+shader_parameter/thickness = 0.0
+shader_parameter/ring_count = 4
+shader_parameter/ring_offset = null
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/border_clipping_fix = true
+shader_parameter/aspect_ratio = 1.0
+shader_parameter/square_border = false
+shader_parameter/offset = null
+shader_parameter/max_or_add = false
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n4aim"]
+resource_local_to_scene = true
+size = Vector2(12, 12)
+
+[node name="Gnome" type="CharacterBody2D"]
+script = ExtResource("1_y4xf0")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+avoidance_enabled = true
+debug_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("CapsuleShape2D_ehrkl")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_mj6xh")
+texture = ExtResource("2_x00rq")
+
+[node name="ClickableAreaComponent" parent="." node_paths=PackedStringArray("parent", "sprite") instance=ExtResource("3_mnqev")]
+parent = NodePath("..")
+sprite = NodePath("../Sprite2D")
+
+[node name="CollisionShape2D" parent="ClickableAreaComponent" index="0"]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_n4aim")
+disabled = false
+
+[editable path="ClickableAreaComponent"]

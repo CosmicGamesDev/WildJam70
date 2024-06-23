@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://bo8qmhs0flggl"]
+
+[ext_resource type="Texture2D" uid="uid://cs5tfoow4eex0" path="res://mushroom_tower.png" id="1_ku5mj"]
+[ext_resource type="Shader" path="res://outline.gdshader" id="1_tdgue"]
+[ext_resource type="PackedScene" uid="uid://dolh3oeb6umyg" path="res://clickable_area_component.tscn" id="2_hvb74"]
+[ext_resource type="Script" path="res://tower.gd" id="3_fi6si"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_42c38"]
+shader = ExtResource("1_tdgue")
+shader_parameter/thickness = 0.0
+shader_parameter/ring_count = 4
+shader_parameter/ring_offset = null
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/border_clipping_fix = true
+shader_parameter/aspect_ratio = 1.0
+shader_parameter/square_border = false
+shader_parameter/offset = null
+shader_parameter/max_or_add = false
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vr6it"]
+size = Vector2(30, 47)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hyudy"]
+size = Vector2(16, 41)
+
+[node name="Tower" type="Sprite2D" groups=["tower"]]
+material = SubResource("ShaderMaterial_42c38")
+texture = ExtResource("1_ku5mj")
+script = ExtResource("3_fi6si")
+
+[node name="ClickableAreaComponent" parent="." node_paths=PackedStringArray("parent", "sprite") instance=ExtResource("2_hvb74")]
+parent = NodePath("..")
+sprite = NodePath("..")
+
+[node name="CollisionShape2D" parent="ClickableAreaComponent" index="0"]
+position = Vector2(0, 4)
+
+[node name="PickupArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea"]
+position = Vector2(0, 2.5)
+shape = SubResource("RectangleShape2D_vr6it")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, 2.5)
+shape = SubResource("RectangleShape2D_hyudy")
+
+[node name="SpawnPoint" type="Node2D" parent="."]
+position = Vector2(-1, 28)
+
+[connection signal="area_entered" from="PickupArea" to="." method="_on_pickup_area_area_entered"]
+
+[editable path="ClickableAreaComponent"]
